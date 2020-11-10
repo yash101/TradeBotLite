@@ -1,0 +1,2 @@
+# TradeBotLite
+TradeBot but Simpler
