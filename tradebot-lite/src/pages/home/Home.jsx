@@ -1,9 +1,21 @@
 import SidebarLayout from '../../layouts/sidebar/Sidebar';
+import { HomeOutlined } from '@ant-design/icons';
 
 function Home() {
   return (
-    <SidebarLayout title="Home"></SidebarLayout>
+    <SidebarLayout page={HomePage}>
+      <p>Hello World!</p>
+    </SidebarLayout>
   );
 }
 
-export default Home;
+const HomePage = {
+  id: 'home',
+  title: 'Home',
+  component: Home,
+  url: '/',
+  sidebar: true,
+  icon: HomeOutlined,
+};
+
+export default HomePage;
