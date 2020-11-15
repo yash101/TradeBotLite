@@ -8,6 +8,10 @@ const { Header, Content, Footer, Sider } = Layout;
 const { Title } = Typography;
 
 class Sidebar extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  
   state = {
     collapsed: false,
   };
@@ -54,7 +58,8 @@ class Sidebar extends React.Component {
               marginBottom: 0,
               padding: 0,
               marginLeft: marginLeft + 8,
-          }}>
+            }}
+          >
             <Title
               level={1}
               style={{
@@ -75,7 +80,7 @@ class Sidebar extends React.Component {
               { this.props.children }
             </div>
           </Content>
-          <Footer style={{ textAlign: 'center' }}>&copy;2020 Devyash Lodha</Footer>
+          <Footer style={{ textAlign: 'center', marginLeft: marginLeft }}>&copy;2020 Devyash Lodha</Footer>
         </Layout>
       </Layout>
     );
