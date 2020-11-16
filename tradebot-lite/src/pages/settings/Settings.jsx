@@ -3,7 +3,7 @@ import { Tabs } from 'antd';
 import { SettingOutlined } from '@ant-design/icons';
 import { BrowserRouter, Switch, Route, useRouteMatch } from 'react-router-dom';
 
-import SidebarLayout from '../../layouts/sidebar/Sidebar';
+import SidebarLayout from '../../layouts/sidebar-layout/SidebarLayout';
 
 const { TabPane } = Tabs;
 

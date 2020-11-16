@@ -1,4 +1,4 @@
-import { ApiBase } from './apiconfig';
+import { ApiBase } from '../config';
 import axios from 'axios';
 
 const ax = axios.create({

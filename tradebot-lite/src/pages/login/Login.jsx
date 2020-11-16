@@ -1,7 +1,7 @@
 import React from 'react';
 import { UserOutlined } from '@ant-design/icons';
 
-import Prompt from '../../layouts/prompt/Prompt';
+import PromptLayout from '../../layouts/prompt-layout/PromptLayout';
 
 class Login extends React.Component {
   constructor(props) {
@@ -10,9 +10,9 @@ class Login extends React.Component {
 
   render() {
     return (
-      <Prompt>
+      <PromptLayout>
         <h1>Hello World!</h1>
-      </Prompt>
+      </PromptLayout>
     );
   }
 }

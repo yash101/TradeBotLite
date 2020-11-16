@@ -1,4 +1,4 @@
-import SidebarLayout from '../../layouts/sidebar/Sidebar';
+import SidebarLayout from '../../layouts/sidebar-layout/SidebarLayout';
 import { HomeOutlined } from '@ant-design/icons';
 
 function Home() {
