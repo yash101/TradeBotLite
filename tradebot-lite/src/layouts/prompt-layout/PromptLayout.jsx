@@ -31,7 +31,7 @@ class Prompt extends React.Component {
               padding: 32
             }}
           >
-            <Title level="h1" style={{ textAlign: 'center' }}>{ this.props.title || 'Form' }</Title>
+            <Title level="1" style={{ textAlign: 'center' }}>{ this.props.title || 'Form' }</Title>
             <Divider />
             { this.props.children }
           </div>

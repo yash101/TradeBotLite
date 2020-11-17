@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Button, Divider } from 'antd';
+import { Form, Input, Button, Divider, Alert } from 'antd';
 import { Link } from 'react-router-dom';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
@@ -9,6 +9,11 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
   }
+
+  state = {
+    errorPopup: false,
+    errorMessage: 'An error occurred while attempting to create your account. Please check to make sure you provided a unique username and email, and ensure all fields are filled out',
+  };
 
   formFinished(values) {
   }
@@ -23,8 +28,24 @@ class Login extends React.Component {
       wrapperCol: { span: 20, offset: 4 }
     };
 
+    let errorAlert = null;
+    if (this.state.errorPopup) {
+      errorAlert = (
+        <Alert
+          message={this.state.errorMessage}
+          type="error"
+          closable="true"
+          style={{ marginBottom: 24 }}
+        ></Alert>
+      );
+    }
+
     return (
-      <PromptLayout title="Sign Into TradeBot">
+
+      <PromptLayout title="Create TradeBot Account">
+
+        { errorAlert }
+
         <Form
           {...layout}
           name="loginForm"
@@ -33,23 +54,66 @@ class Login extends React.Component {
           layout="horizontal"
         >
           <Form.Item
-            label="Username"
-            name="username"
+            label="First Name"
+            name="fname"
             rules={[{
               required: true,
-              message: 'Username or Email Required'
+              message: 'First Name is required'
             }]}
           >
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Username or Email"
+              placeholder="First Name"
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Last Name"
+            name="lname"
+            rules={[{
+              required: true,
+              message: 'Last Name is Required'
+            }]}
+          >
+            <Input
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              placeholder="Last Name"
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Username"
+            name="username"
+            rules={[{
+              required: true,
+              message: 'Username is Required'
+            }]}
+          >
+            <Input
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              placeholder="Username"
+            />
+          </Form.Item>
+          
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[{
+              required: true,
+              message: 'Email address is required'
+            }]}
+          >
+            <Input
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              type="email"
+              placeholder="Email Address"
             />
           </Form.Item>
 
           <Form.Item
             {...layout}
             label="Password"
-            name="username"
+            name="password"
             rules={[{
               required: true,
               message: 'Password is Required'
@@ -62,15 +126,31 @@ class Login extends React.Component {
             />
           </Form.Item>
 
+          <Form.Item
+            {...layout}
+            label="Password"
+            name="passwordAgain"
+            rules={[{
+              required: true,
+              message: 'Password is Required'
+            }]}
+          >
+            <Input
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              type="password"
+              placeholder="Password (Repeated)"
+            />
+          </Form.Item>
+
           <Form.Item {...buttonLayout}>
-            <Button type="primary" htmlType="submit">Log In</Button>
+            <Button type="primary" htmlType="submit">Create TradeBot Account</Button>
           </Form.Item>
         </Form>
 
         <Divider />
 
         <div style={{ textAlign: 'center' }}>
-          <Link to="/signup">Don't have an account? Sign up!</Link>
+          <Link to="/login">Have an account? Sign in instead</Link>
         </div>
       </PromptLayout>
     );
