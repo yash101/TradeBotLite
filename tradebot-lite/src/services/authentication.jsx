@@ -7,7 +7,7 @@ const ax = axios.create({
 });
 
 function isLoggedIn() {
-  localStorage.getItem('authorization-key');
+  return (!!document.cookie);
 }
 
 function logIn(username, password, remember) {

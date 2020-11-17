@@ -7,7 +7,7 @@ function Error() {
 const ErrorPage = {
   id: 'error',
   title: 'Error',
-  component: Error,
+  Component: Error,
   url: '/error',
   sidebar: false,
   icon: CloseOutlined,

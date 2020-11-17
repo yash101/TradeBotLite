@@ -78,12 +78,12 @@ class Login extends React.Component {
 }
 
 const LoginPage = {
-  id: 'login',
-  title: 'Log In',
+  id: 'signup',
+  title: 'Sign Up',
   Component: Login,
   sidebar: true,
   icon: UserOutlined,
-  url: '/login',
+  url: '/signup',
 };
 
 export default LoginPage;

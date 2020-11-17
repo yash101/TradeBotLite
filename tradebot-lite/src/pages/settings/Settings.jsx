@@ -31,7 +31,7 @@ class Settings extends React.Component {
 const SettingsPage = {
   id: 'settings',
   title: 'Settings',
-  component: Settings,
+  Component: Settings,
   url: '/settings',
   sidebar: true,
   icon: SettingOutlined,

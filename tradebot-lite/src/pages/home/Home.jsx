@@ -12,7 +12,7 @@ function Home() {
 const HomePage = {
   id: 'home',
   title: 'Home',
-  component: Home,
+  Component: Home,
   url: '/',
   sidebar: true,
   icon: HomeOutlined,
