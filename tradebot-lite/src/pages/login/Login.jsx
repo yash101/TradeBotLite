@@ -1,9 +1,8 @@
 import React from 'react';
 import { Form, Input, Button, Divider, Alert, Spin } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import axios from 'axios';
-import urljoin from 'url-join';
+import { logInUser } from '../../services/authentication';
 
 import { ApiBase } from '../../config';
 import PromptLayout from '../../layouts/prompt-layout/PromptLayout';
@@ -18,43 +17,29 @@ class Login extends React.Component {
     errorMessage: 'Signin failed. Please check your username and password',
     errorType: 'error',
     spinner: false,
+    redirect: null,
   };
 
   async formFinished(values) {
     this.setState({ spinner: true });
 
-    await axios({
-      method: 'post',
-      baseURL: ApiBase,
-      url: '/auth/login/user',
-      data: {
-        username: values.username,
-        password: values.password,
-      },
-    }).then(response => {
-      if (response.status === 200) {
-        this.setState({
-          spinner: false,
-          errorMessage: 'Signin Successful!',
-          errorType: 'success',
-        });
-      }
-    }).catch(err => {
+    const res = await logInUser(values.username, values.password);
+    if (res.status) {
       this.setState({
-        errorPopup: true,
-        errorMessage: 'Signin Failed. Please check your username and password.',
-        errorType: 'error',
         spinner: false,
+        errorMessage: 'Signin Successful!',
+        errorType: 'success',
+        errorPopup: true,
+        redirect: '/',
       });
-
-      console.error(err);
-    });
-
-    await axios({
-      method: 'get',
-      baseURL: ApiBase,
-      url: '/'
-    });
+    } else {
+      this.setState({
+        spinner: false,
+        errorMessage: 'Sign In Failed' + ((res.reason) ? ': ' + res.reason : ''),
+        errorType: 'error',
+        errorPopup: true,
+      });
+    }
   }
 
   render() {
@@ -78,6 +63,9 @@ class Login extends React.Component {
         ></Alert>
       );
     }
+
+    if (this.state.redirect)
+      return <Redirect to={this.state.redirect} />;
 
     return (
       <PromptLayout title="Sign Into TradeBot">

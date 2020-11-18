@@ -1,7 +1,8 @@
 import React from 'react';
-import { Form, Input, Button, Divider, Alert } from 'antd';
-import { Link } from 'react-router-dom';
+import { Form, Input, Button, Divider, Alert, Spin } from 'antd';
+import { Link, Redirect } from 'react-router-dom';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { register } from '../../services/authentication';
 
 import PromptLayout from '../../layouts/prompt-layout/PromptLayout';
 
@@ -13,9 +14,49 @@ class Login extends React.Component {
   state = {
     errorPopup: false,
     errorMessage: 'An error occurred while attempting to create your account. Please check to make sure you provided a unique username and email, and ensure all fields are filled out',
+    errorType: 'error',
+    spinner: false,
+    redirect: null,
   };
 
-  formFinished(values) {
+  async formFinished(values) {
+    this.setState({ spinner: true });
+
+    if (values.password !== values.passwordAgain) {
+      this.setState({
+        spinner: false,
+        errorMessage: 'Passwords must match!',
+        errorType: 'error',
+        errorPopup: true,
+      });
+
+      return;
+    }
+
+    const res = await register(
+      values.username.toLowerCase(),
+      values.email.toLowerCase(),
+      values.password,
+      values.fname,
+      values.lname
+    );
+
+    if (!res.status) {
+      this.setState({
+        spinner: false,
+        errorMessage: 'Failed to create account' + ((res.reason) ? ': ' + res.reason : ''),
+        errorType: 'error',
+        errorPopup: true,
+      });
+    } else {
+      this.setState({
+        spinner: false,
+        errorMessage: 'Successfully created your TradeBot account!',
+        errorType: 'success',
+        errorPopup: true,
+        redirect: '/login',
+      });
+    }
   }
 
   render() {
@@ -33,119 +74,123 @@ class Login extends React.Component {
       errorAlert = (
         <Alert
           message={this.state.errorMessage}
-          type="error"
+          type={this.state.errorType}
           closable="true"
           style={{ marginBottom: 24 }}
         ></Alert>
       );
     }
 
-    return (
+    if (this.state.redirect)
+      return <Redirect to={this.state.redirect} />;
 
+    return (
       <PromptLayout title="Create TradeBot Account">
 
         { errorAlert }
 
-        <Form
-          {...layout}
-          name="loginForm"
-          onFinish={this.formFinished}
-          size="large"
-          layout="horizontal"
-        >
-          <Form.Item
-            label="First Name"
-            name="fname"
-            rules={[{
-              required: true,
-              message: 'First Name is required'
-            }]}
-          >
-            <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="First Name"
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Last Name"
-            name="lname"
-            rules={[{
-              required: true,
-              message: 'Last Name is Required'
-            }]}
-          >
-            <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Last Name"
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Username"
-            name="username"
-            rules={[{
-              required: true,
-              message: 'Username is Required'
-            }]}
-          >
-            <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Username"
-            />
-          </Form.Item>
-          
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[{
-              required: true,
-              message: 'Email address is required'
-            }]}
-          >
-            <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              type="email"
-              placeholder="Email Address"
-            />
-          </Form.Item>
-
-          <Form.Item
+        <Spin spinning={this.state.spinner}>
+          <Form
             {...layout}
-            label="Password"
-            name="password"
-            rules={[{
-              required: true,
-              message: 'Password is Required'
-            }]}
+            name="loginForm"
+            onFinish={values => this.formFinished(values)}
+            size="large"
+            layout="horizontal"
           >
-            <Input
-              prefix={<LockOutlined className="site-form-item-icon" />}
-              type="password"
-              placeholder="Password"
-            />
-          </Form.Item>
+            <Form.Item
+              label="First Name"
+              name="fname"
+              rules={[{
+                required: true,
+                message: 'First Name is required'
+              }]}
+            >
+              <Input
+                prefix={<UserOutlined className="site-form-item-icon" />}
+                placeholder="First Name"
+              />
+            </Form.Item>
 
-          <Form.Item
-            {...layout}
-            label="Password"
-            name="passwordAgain"
-            rules={[{
-              required: true,
-              message: 'Password is Required'
-            }]}
-          >
-            <Input
-              prefix={<LockOutlined className="site-form-item-icon" />}
-              type="password"
-              placeholder="Password (Repeated)"
-            />
-          </Form.Item>
+            <Form.Item
+              label="Last Name"
+              name="lname"
+              rules={[{
+                required: true,
+                message: 'Last Name is Required'
+              }]}
+            >
+              <Input
+                prefix={<UserOutlined className="site-form-item-icon" />}
+                placeholder="Last Name"
+              />
+            </Form.Item>
 
-          <Form.Item {...buttonLayout}>
-            <Button type="primary" htmlType="submit">Create TradeBot Account</Button>
-          </Form.Item>
-        </Form>
+            <Form.Item
+              label="Username"
+              name="username"
+              rules={[{
+                required: true,
+                message: 'Username is Required'
+              }]}
+            >
+              <Input
+                prefix={<UserOutlined className="site-form-item-icon" />}
+                placeholder="Username"
+              />
+            </Form.Item>
+            
+            <Form.Item
+              label="Email"
+              name="email"
+              rules={[{
+                required: true,
+                message: 'Email address is required'
+              }]}
+            >
+              <Input
+                prefix={<UserOutlined className="site-form-item-icon" />}
+                type="email"
+                placeholder="Email Address"
+              />
+            </Form.Item>
+
+            <Form.Item
+              {...layout}
+              label="Password"
+              name="password"
+              rules={[{
+                required: true,
+                message: 'Password is Required'
+              }]}
+            >
+              <Input
+                prefix={<LockOutlined className="site-form-item-icon" />}
+                type="password"
+                placeholder="Password"
+              />
+            </Form.Item>
+
+            <Form.Item
+              {...layout}
+              label="Password"
+              name="passwordAgain"
+              rules={[{
+                required: true,
+                message: 'Password is Required'
+              }]}
+            >
+              <Input
+                prefix={<LockOutlined className="site-form-item-icon" />}
+                type="password"
+                placeholder="Password (Repeated)"
+              />
+            </Form.Item>
+
+            <Form.Item {...buttonLayout}>
+              <Button type="primary" htmlType="submit">Create TradeBot Account</Button>
+            </Form.Item>
+          </Form>
+        </Spin>
 
         <Divider />
 
