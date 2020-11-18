@@ -1,6 +1,10 @@
 import { CloseOutlined } from '@ant-design/icons';
+import { Helmet } from 'react-helmet';
 
 function Error() {
+  <Helmet>
+    <title>Error</title>
+  </Helmet>
   return <h1>Error</h1>;
 }
 

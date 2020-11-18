@@ -4,25 +4,22 @@ import { SettingOutlined } from '@ant-design/icons';
 import { BrowserRouter, Switch, Route, useRouteMatch } from 'react-router-dom';
 
 import SidebarLayout from '../../layouts/sidebar-layout/SidebarLayout';
+import Admin from './Admin';
+import Accounts from './Accounts';
 
-const { TabPane } = Tabs;
+const SettingsSubPages = {
+  admin: Admin,
+  accounts: Accounts,
+};
 
 class Settings extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+  state = {
+    selectedPage: null,
+  };
 
   render() {
     return (
-      <SidebarLayout page={SettingsPage}>
-        <Tabs defaultActiveKey="1" tabPosition="left" style={{ minHeight: '100%' }}>
-          <TabPane tab="Accounts" key="Accounts">
-            Accounts
-          </TabPane>
-          <TabPane tab="Admin" key="Admin">
-            Admin
-          </TabPane>
-        </Tabs>
+      <SidebarLayout page={SettingsPage} selectedSubItem={null}>
       </SidebarLayout>
     );
   }
@@ -35,6 +32,10 @@ const SettingsPage = {
   url: '/settings',
   sidebar: true,
   icon: SettingOutlined,
+  sidebarSubItems: [
+    SettingsSubPages.admin,
+    SettingsSubPages.accounts,
+  ],
 };
 
 export default SettingsPage;

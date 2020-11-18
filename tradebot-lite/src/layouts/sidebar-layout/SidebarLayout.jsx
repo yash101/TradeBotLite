@@ -3,15 +3,13 @@ import { Layout, Menu, Typography } from 'antd';
 import { pages } from '../../pages/pages';
 import { Link } from 'react-router-dom';
 import { RobotOutlined } from '@ant-design/icons';
+import { Helmet } from 'react-helmet';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { Title } = Typography;
+const { SubMenu } = Menu;
 
 class Sidebar extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  
   state = {
     collapsed: false,
   };
@@ -23,9 +21,27 @@ class Sidebar extends React.Component {
   render() {
     const { collapsed } = this.state;
     const marginLeft = (this.state.collapsed) ? 80 : 200;
+    const title = (this.props.page && this.props.page.title) ? <Helmet><title>{this.props.page.title}</title></Helmet> : null;
+
+    const sidebarMenu = pages.filter(page => page.sidebar)
+    .map(page => {
+      if (page.sidebarSubItems) {
+        const subItems = page.sidebarSubItems.map(item => {
+          return (<Menu.Item
+              key={item.id}
+              icon={<item.icon />}
+            ><Link to={item.url}>{item.title}</Link></Menu.Item>);
+        });
+
+        return <SubMenu key={page.id} icon={<page.icon />} title={page.title}>{subItems}</SubMenu>
+      } else {
+        return <Menu.Item key={page.id} icon={<page.icon />}><Link to={page.url}>{page.title}</Link></Menu.Item>
+      }
+    });
 
     return (
       <Layout style={{ minHeight: '100vh' }}>
+        { title }
         <Sider
           collapsible
           collapsed={collapsed}
@@ -47,7 +63,7 @@ class Sidebar extends React.Component {
             <Menu.Item
               icon={<RobotOutlined />}
             ><Link to="/">TradeBot</Link></Menu.Item>
-            {pages.filter(page => page.sidebar).map(page => <Menu.Item key={page.id} icon={<page.icon />}><Link to={page.url}>{page.title || ''}</Link></Menu.Item>)}
+            { sidebarMenu }
           </Menu>
         </Sider>
         <Layout className="site-layout">
