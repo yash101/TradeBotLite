@@ -8,7 +8,7 @@ let AccountsPage;
 class Accounts extends React.Component {
   render() {
     return (
-      <SidebarLayout page={AccountsPage} title="TradeBot: Account Settings">
+      <SidebarLayout page={AccountsPage} title="TradeBot - Account Settings">
       </SidebarLayout>
     );
   }
