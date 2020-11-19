@@ -14,7 +14,6 @@ const isLoggedIn = async () => {
       withCredentials: true,
     });
 
-    console.log(req.data);
     return (req && req.data && req.data.status === true);
   } catch(err) {
     console.error(err);

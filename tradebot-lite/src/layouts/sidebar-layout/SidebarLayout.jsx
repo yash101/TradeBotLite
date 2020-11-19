@@ -91,6 +91,7 @@ class Sidebar extends React.Component {
           <Menu
             theme="dark"
             defaultSelectedKeys={[ this.props.page.id ]}
+            defaultOpenKeys={[ this.props.page.id, this.props.page.parentId ]}
             mode="inline"
           >
             <Menu.Item

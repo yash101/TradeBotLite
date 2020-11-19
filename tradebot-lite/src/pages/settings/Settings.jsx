@@ -29,7 +29,10 @@ const SettingsPage = {
   subPages: [
     AdminPage,
     AccountsPage,
-  ],
+  ].map(page => { 
+    page.parentId = "settings";
+    return page;
+  }),
 };
 
 export default SettingsPage;
