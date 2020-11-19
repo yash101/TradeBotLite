@@ -1,19 +1,23 @@
 import { CloseOutlined } from '@ant-design/icons';
-import { Helmet } from 'react-helmet';
 
-import { windowTitle } from '../../state/window';
+import SidebarLayout from '../../layouts/sidebar-layout/SidebarLayout';
+
+let ErrorPage;
 
 function Error() {
-  windowTitle.next('TradeBot | Error');
-  return <h1>Error</h1>;
+  return (
+    <SidebarLayout page={ErrorPage} title={ErrorPage.title}>
+      <h1>An error occurred.</h1>
+    </SidebarLayout>
+  );
 }
 
-const ErrorPage = {
+ErrorPage = {
   id: 'error',
   title: 'Error',
   Component: Error,
   url: '/error',
-  sidebar: true,
+  sidebar: false,
   icon: CloseOutlined,
 };
 

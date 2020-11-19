@@ -3,10 +3,15 @@ import { pages } from './pages/pages';
 import ErrorPage from './pages/error/Error';
 
 function Layout() {
-  const routes = pages.map(page => {
-    const exact = page.url === '/';
-    return <Route path={page.url} key={page.id} exact={exact}><page.Component page={page}/></Route>;
+  let routes = [];
+  pages.forEach(page => {
+    (page.subPages || []).forEach(subpage => {
+      routes.push(<Route path={subpage.url} key={subpage.id}><subpage.Component /></Route>);
+    });
+    const exactRoute = page.url === '/';
+    routes.push(<Route path={page.url} key={page.id} exact={exactRoute}><page.Component page={page} /></Route>);
   });
+
   return (
     <BrowserRouter>
       <Switch>

@@ -19,6 +19,9 @@ class Prompt extends React.Component {
         }}
         className="site-layout"
       >
+        <Helmet>
+          <title>{this.props.page.title}</title>
+        </Helmet>
         <Content style={{ margin: '8px' }}>
           <div
             className="site-layout-background"

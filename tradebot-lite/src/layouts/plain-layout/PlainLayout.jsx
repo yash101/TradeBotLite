@@ -1,6 +1,5 @@
 import React from 'react';
 import { Layout } from 'antd';
-import { Helmet } from 'react-helmet';
 
 class Plain extends React.Component {
   render() {

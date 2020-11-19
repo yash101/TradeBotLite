@@ -1,6 +1,7 @@
 import { ApiBase } from '../config';
 import axios from 'axios';
 import { BehaviorSubject } from 'rxjs';
+import { Redirect } from 'react-router-dom';
 
 const currentUser = new BehaviorSubject(null);
 
@@ -13,6 +14,7 @@ const isLoggedIn = async () => {
       withCredentials: true,
     });
 
+    console.log(req.data);
     return (req && req.data && req.data.status === true);
   } catch(err) {
     console.error(err);
@@ -45,6 +47,8 @@ const logInUser = async (username, password) => {
 };
 
 const logOut = async () => {
+  currentUser.next(null);
+
   try {
     await axios({
       method: 'get',
@@ -75,7 +79,7 @@ const getUser = async () => {
       currentUser.next(null);
       return false;
     } else {
-      currentUser.next(res.data);
+      currentUser.next(res.data[0]);
       return true;
     }
   } catch(err) {
@@ -110,6 +114,18 @@ const register = async (username, email, password, firstName, lastName) => {
   }
 };
 
+getUser();
+
+function UnauthenticatedRedirector(props) {
+  if (!props.supportedScopes || props.supportedScopes.includes('anonymous') || (currentUser.value && currentUser.value.role && props.supportedScopes.includes(currentUser.value.role)))
+    return null;
+
+  if (!currentUser.value)
+    return <Redirect to="/login" />;
+
+  return (<Redirect to="/unauthorized" />);
+}
+
 export {
   isLoggedIn,
   logInUser,
@@ -117,6 +133,7 @@ export {
   getUser,
   register,
   currentUser,
+  UnauthenticatedRedirector,
 };
 
 //

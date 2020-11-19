@@ -1,19 +1,20 @@
-import SidebarLayout from '../../layouts/sidebar-layout/SidebarLayout';
 import { HomeOutlined } from '@ant-design/icons';
 
-import { windowTitle } from '../../state/window';
+import { UnauthenticatedRedirector } from '../../services/authentication';
+import SidebarLayout from '../../layouts/sidebar-layout/SidebarLayout';
+
+let HomePage;
 
 function Home() {
-  windowTitle.next('TradeBot | Home');
-
   return (
     <SidebarLayout page={HomePage}>
+      <UnauthenticatedRedirector supportedScopes={HomePage.allowedRoles} />
       <p>Hello World!</p>
     </SidebarLayout>
   );
 }
 
-const HomePage = {
+HomePage = {
   id: 'home',
   title: 'Home',
   Component: Home,

@@ -2,22 +2,18 @@ import React from 'react';
 import { Form, Input, Button, Divider, Alert, Spin } from 'antd';
 import { Link, Redirect } from 'react-router-dom';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { logInUser } from '../../services/authentication';
+import { logInUser, isLoggedIn } from '../../services/authentication';
 
-import { windowTitle } from '../../state/window';
 import PromptLayout from '../../layouts/prompt-layout/PromptLayout';
 
 class Login extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   state = {
     errorPopup: false,
     errorMessage: 'Signin failed. Please check your username and password',
     errorType: 'error',
     spinner: false,
     redirect: null,
+    loggedIn: false,
   };
 
   async formFinished(values) {
@@ -64,18 +60,23 @@ class Login extends React.Component {
       );
     }
 
-    if (this.state.redirect)
+    (async () => {
+      if (await isLoggedIn()) {
+        console.log('logged in');
+        this.setState({
+          loggedIn: true,
+        })
+      }
+    })();
+
+    if (this.state.loggedIn)
       return <Redirect to={this.state.redirect} />;
     
-    windowTitle.next('TradeBot | Sign In');
-
     return (
-      <PromptLayout title="Sign Into TradeBot">
+      <PromptLayout page={LoginPage} title="TradeBot - Sign In">
         { errorAlert }
 
-        <Spin
-          spinning={this.state.spinner}
-        >
+        <Spin spinning={this.state.spinner}>
           <Form
             {...layout}
             name="loginForm"
@@ -131,9 +132,9 @@ class Login extends React.Component {
 
 const LoginPage = {
   id: 'login',
-  title: 'Log In',
+  title: 'TradeBot - Sign In',
   Component: Login,
-  sidebar: true,
+  sidebar: false,
   icon: UserOutlined,
   url: '/login',
 };

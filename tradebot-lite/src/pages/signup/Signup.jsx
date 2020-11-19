@@ -2,15 +2,11 @@ import React from 'react';
 import { Form, Input, Button, Divider, Alert, Spin } from 'antd';
 import { Link, Redirect } from 'react-router-dom';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { register } from '../../services/authentication';
+import { register, isLoggedIn } from '../../services/authentication';
 
 import PromptLayout from '../../layouts/prompt-layout/PromptLayout';
 
-class Login extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
+class Signup extends React.Component {
   state = {
     errorPopup: false,
     errorMessage: 'An error occurred while attempting to create your account. Please check to make sure you provided a unique username and email, and ensure all fields are filled out',
@@ -81,11 +77,18 @@ class Login extends React.Component {
       );
     }
 
+    (async () => {
+      if (await isLoggedIn())
+        this.setState({ loggedIn: true });
+    })();
+    if (this.state.loggedIn)
+      return <Redirect to="/" />;
+
     if (this.state.redirect)
       return <Redirect to={this.state.redirect} />;
 
     return (
-      <PromptLayout title="Create TradeBot Account">
+      <PromptLayout page={SignupPage} title="Create TradeBot Account">
 
         { errorAlert }
 
@@ -202,13 +205,13 @@ class Login extends React.Component {
   }
 }
 
-const LoginPage = {
+const SignupPage = {
   id: 'signup',
-  title: 'Sign Up',
-  Component: Login,
-  sidebar: true,
+  title: 'TradeBot - Sign Up',
+  Component: Signup,
+  sidebar: false,
   icon: UserOutlined,
   url: '/signup',
 };
 
-export default LoginPage;
+export default SignupPage;

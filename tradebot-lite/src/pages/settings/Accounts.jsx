@@ -1,19 +1,27 @@
 import React from 'react';
 import { AppstoreAddOutlined } from '@ant-design/icons';
-import { windowTitle } from '../../state/window'
+
+import SidebarLayout from '../../layouts/sidebar-layout/SidebarLayout';
+
+let AccountsPage;
 
 class Accounts extends React.Component {
   render() {
-    windowTitle.next('Settings | Accounts');
-    return null;
+    return (
+      <SidebarLayout page={AccountsPage} title="TradeBot: Account Settings">
+      </SidebarLayout>
+    );
   }
 }
 
-export default {
+AccountsPage = {
   id: 'settings/accounts',
   url: '/settings/accounts',
-  component: Accounts,
+  Component: Accounts,
   title: 'Accounts',
   icon: AppstoreAddOutlined,
   allowedRoles: ['user', 'admin', 'root'],
+  sidebar: true,
 };
+
+export default AccountsPage;

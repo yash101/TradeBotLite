@@ -3,6 +3,9 @@ import { Layout, Menu, Typography } from 'antd';
 import { pages } from '../../pages/pages';
 import { Link } from 'react-router-dom';
 import { RobotOutlined } from '@ant-design/icons';
+import { Helmet } from 'react-helmet';
+
+import { currentUser } from '../../services/authentication';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { Title } = Typography;
@@ -11,34 +14,67 @@ const { SubMenu } = Menu;
 class Sidebar extends React.Component {
   state = {
     collapsed: false,
+    user: null,
   };
 
-  onCollapse = collapsed => {
-    this.setState({ collapsed });
-  };
+  componentDidMount() {
+    this.userSubscription = currentUser.subscribe(user => {
+      if (this.state.user !== user)
+        this.setState({ user: user });
+      console.log(user);
+    });
+  }
+
+  componentWillUnmount = () => { this.userSubscription.unsubscribe() };
+
+  onCollapse = collapsed => { this.setState({ collapsed }) };
 
   render() {
     const { collapsed } = this.state;
     const marginLeft = (this.state.collapsed) ? 80 : 200;
 
-    const sidebarMenu = pages.filter(page => page.sidebar)
-    .map(page => {
-      if (page.sidebarSubItems) {
-        const subItems = page.sidebarSubItems.map(item => {
-          return (<Menu.Item
-              key={item.id}
-              icon={<item.icon />}
-            ><Link to={item.url}>{item.title}</Link></Menu.Item>);
+    const sidebarMenu = pages.filter(page => {
+      // get the current user and its type
+      return (page.sidebar && (!page.allowedRoles || page.allowedRoles.includes((this.state.user && this.state.user.role) || 'anonymous')));
+    }).map(page => {
+      // if there are subpages...
+      if (page.subPages && page.subPages.length !== 0) {
+        const subpages = page.subPages.filter(subpage => subpage.sidebar).map(subpage => {
+          return (
+            <Menu.Item
+              key={subpage.id}
+              icon={<subpage.icon />}
+              title={subpage.title}>
+              <Link to={subpage.url}>{subpage.title}</Link>
+            </Menu.Item>
+          );
         });
-
-        return <SubMenu key={page.id} icon={<page.icon />} title={page.title}>{subItems}</SubMenu>
+        const mainPageMenuItem = (page.Component) ? <Menu.Item key={page.id} icon={<page.icon />}><Link to={page.url}>{page.title}</Link></Menu.Item> : null;
+        return (
+          <SubMenu
+            key={page.id}
+            icon={<page.icon />}
+            title={page.title}
+          >
+            {mainPageMenuItem}
+            {subpages}
+          </SubMenu>
+        );
       } else {
-        return <Menu.Item key={page.id} icon={<page.icon />}><Link to={page.url}>{page.title}</Link></Menu.Item>
+        return (
+          <Menu.Item
+            key={page.id}
+            icon={<page.icon />}
+          ><Link to={page.url}>{page.title}</Link></Menu.Item>
+        );
       }
     });
 
     return (
       <Layout style={{ minHeight: '100vh' }}>
+        <Helmet>
+          <title>{this.props.title || this.props.page.title}</title>
+        </Helmet>
         <Sider
           collapsible
           collapsed={collapsed}
