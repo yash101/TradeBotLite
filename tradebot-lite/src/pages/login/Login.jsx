@@ -4,7 +4,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { logInUser } from '../../services/authentication';
 
-import { ApiBase } from '../../config';
+import { windowTitle } from '../../state/window';
 import PromptLayout from '../../layouts/prompt-layout/PromptLayout';
 
 class Login extends React.Component {
@@ -66,6 +66,8 @@ class Login extends React.Component {
 
     if (this.state.redirect)
       return <Redirect to={this.state.redirect} />;
+    
+    windowTitle.next('TradeBot | Sign In');
 
     return (
       <PromptLayout title="Sign Into TradeBot">

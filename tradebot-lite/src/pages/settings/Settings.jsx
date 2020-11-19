@@ -3,6 +3,8 @@ import { Tabs } from 'antd';
 import { SettingOutlined } from '@ant-design/icons';
 import { BrowserRouter, Switch, Route, useRouteMatch } from 'react-router-dom';
 
+import { windowTitle } from '../../state/window';
+
 import SidebarLayout from '../../layouts/sidebar-layout/SidebarLayout';
 import Admin from './Admin';
 import Accounts from './Accounts';
@@ -18,6 +20,8 @@ class Settings extends React.Component {
   };
 
   render() {
+    windowTitle.next('TradeBot | Settings');
+
     return (
       <SidebarLayout page={SettingsPage} selectedSubItem={null}>
       </SidebarLayout>
@@ -36,6 +40,7 @@ const SettingsPage = {
     SettingsSubPages.admin,
     SettingsSubPages.accounts,
   ],
+  allowedRoles: ['user', 'admin', 'root'],
 };
 
 export default SettingsPage;

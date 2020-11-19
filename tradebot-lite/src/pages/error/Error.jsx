@@ -1,10 +1,10 @@
 import { CloseOutlined } from '@ant-design/icons';
 import { Helmet } from 'react-helmet';
 
+import { windowTitle } from '../../state/window';
+
 function Error() {
-  <Helmet>
-    <title>Error</title>
-  </Helmet>
+  windowTitle.next('TradeBot | Error');
   return <h1>Error</h1>;
 }
 
@@ -13,7 +13,7 @@ const ErrorPage = {
   title: 'Error',
   Component: Error,
   url: '/error',
-  sidebar: false,
+  sidebar: true,
   icon: CloseOutlined,
 };
 

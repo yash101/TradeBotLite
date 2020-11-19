@@ -3,7 +3,6 @@ import { Layout, Menu, Typography } from 'antd';
 import { pages } from '../../pages/pages';
 import { Link } from 'react-router-dom';
 import { RobotOutlined } from '@ant-design/icons';
-import { Helmet } from 'react-helmet';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { Title } = Typography;
@@ -21,7 +20,6 @@ class Sidebar extends React.Component {
   render() {
     const { collapsed } = this.state;
     const marginLeft = (this.state.collapsed) ? 80 : 200;
-    const title = (this.props.page && this.props.page.title) ? <Helmet><title>{this.props.page.title}</title></Helmet> : null;
 
     const sidebarMenu = pages.filter(page => page.sidebar)
     .map(page => {
@@ -41,7 +39,6 @@ class Sidebar extends React.Component {
 
     return (
       <Layout style={{ minHeight: '100vh' }}>
-        { title }
         <Sider
           collapsible
           collapsed={collapsed}

@@ -7,8 +7,6 @@ const { Title } = Typography;
 
 class Prompt extends React.Component {
   render() {
-    const title = (this.props.title) ? <Helmet><title>{this.props.title}</title></Helmet> : null;
-
     return (
       <Layout
         style={{
@@ -21,7 +19,6 @@ class Prompt extends React.Component {
         }}
         className="site-layout"
       >
-        {title}
         <Content style={{ margin: '8px' }}>
           <div
             className="site-layout-background"

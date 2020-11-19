@@ -1,5 +1,8 @@
 import { ApiBase } from '../config';
 import axios from 'axios';
+import { BehaviorSubject } from 'rxjs';
+
+const currentUser = new BehaviorSubject(null);
 
 const isLoggedIn = async () => {
   try {
@@ -31,6 +34,7 @@ const logInUser = async (username, password) => {
     });
 
     if (res && res.status === 200) {
+      await getUser();
       return { status: true };
     } else {
       return { status: false, reason: (res && res.data && res.data.reason) || '' };
@@ -54,10 +58,31 @@ const logOut = async () => {
     console.error(err);
     return false;
   }
-}
+};
 
 const getUser = async () => {
-}
+  try {
+    const res = await axios({
+      method: 'get',
+      baseURL: ApiBase,
+      url: '/user/info',
+      withCredentials: true,
+      validateStatus: false,
+    });
+
+    if (res.status !== 200) {
+      console.error('Failed to get user data');
+      currentUser.next(null);
+      return false;
+    } else {
+      currentUser.next(res.data);
+      return true;
+    }
+  } catch(err) {
+    console.error(err);
+    return false;
+  }
+};
 
 const register = async (username, email, password, firstName, lastName) => {
   try {
@@ -83,7 +108,7 @@ const register = async (username, email, password, firstName, lastName) => {
   } catch(err) {
     return { status: false, reason: 'request failed', error: err };
   }
-}
+};
 
 export {
   isLoggedIn,
@@ -91,6 +116,7 @@ export {
   logOut,
   getUser,
   register,
+  currentUser,
 };
 
 //
