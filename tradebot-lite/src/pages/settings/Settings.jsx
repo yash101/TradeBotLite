@@ -12,7 +12,7 @@ class Settings extends React.Component {
 
   render() {
     return (
-      <SidebarLayout page={SettingsPage}>
+      <SidebarLayout page={SettingsPage} title="TradeBot - Settings">
       </SidebarLayout>
     );
   }
